@@ -1,0 +1,31 @@
+name: Scrape RealmEye Guild Stats
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Scrape RealmEye
+        run: node scripts/scrape-realmeye.js
+
+      - name: Commit updated stats
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/guild-stats.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update guild stats" && git push)
