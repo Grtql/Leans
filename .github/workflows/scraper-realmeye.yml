@@ -2,7 +2,7 @@ name: Scrape RealmEye Guild Stats
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # co 30
+    - cron: '*/5 * * * *' # co 5, bylo 30
   workflow_dispatch:
   
 permissions:
