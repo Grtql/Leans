@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leans — Guild Landing</title>
+  <link rel="icon" type="image/x-icon" href="hrmQLfs.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-0: #000000;
+      --accent-1: #502F4C;
+      --accent-2: #70587C;
+      --accent-3: #C8B8DB;
+      --accent-4: #F9F4F5;
+      --radius: 14px;
+      --transition: 200ms cubic-bezier(.2,.9,.3,1);
+      --slot-item-h: 32px; /* wysokość slot item — synchronizuj z JS */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      background: linear-gradient(180deg, var(--bg-0) 0%, #0a0610 60%);
+      color: var(--accent-4);
+      font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1100px;
+      padding: clamp(24px,6vw,48px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
+
+    .logo {
+      position: relative;
+      display: inline-block;
+      font-weight: 800;
+      font-size: clamp(48px,12vw,140px);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 1;
+      background: linear-gradient(
+        90deg,
+        #502F4C 0%,
+        #70587C 25%,
+        #C8B8DB 60%,
+        #F9F4F5 100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 8px 26px rgba(80,47,76,0.45));
+      text-shadow: 0 2px 0 rgba(0,0,0,0.12), 0 12px 30px rgba(80,47,76,0.18);
+      animation: gradientSwoop 6s ease-in-out infinite;
+      will-change: background-position, filter;
+    }
+
+    @keyframes gradientSwoop {
+      0% {
+        background-position: 0% 50%;
+        filter: drop-shadow(0 8px 24px rgba(80,47,76,0.45));
+      }
+      50% {
+        background-position: 100% 50%;
+        filter: drop-shadow(0 8px 36px rgba(200,184,219,0.6));
+      }
+      100% {
+        background-position: 0% 50%;
+        filter: drop-shadow(0 8px 24px rgba(80,47,76,0.45));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo { animation: none; background-position: 50% 50%; filter: none; }
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--accent-3);
+      opacity: 0.95;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      font-size: clamp(12px,1.6vw,18px);
+    }
+
+    .controls {
+      margin-top: clamp(40px,5vw,56px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .btn {
+      --btn-h: 66px;
+      height: var(--btn-h);
+      min-width: 220px;
+      padding: 0 32px;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all var(--transition);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(255,255,255,0.02);
+    }
+
+    .btn-apply {
+      background: linear-gradient(180deg, var(--accent-2), var(--accent-1));
+      color: var(--accent-4);
+      border-color: rgba(255,255,255,0.04);
+    }
+
+    .btn-apply:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 12px 36px rgba(80,47,76,0.6);
+    }
+
+    .stats {
+      margin-top: 60px;
+      display: flex;
+      gap: 34px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.04);
+      padding: 20px 28px;
+      border-radius: var(--radius);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+      min-width: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--accent-3);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    /* --- stat value + slot animation styles --- */
+    .stat-value {
+      position: relative;
+      width: 120px;
+      height: var(--slot-item-h);
+      margin: 0 auto;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-4);
+      text-shadow: 0 0 10px rgba(80,47,76,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .slot-reel {
+      display: none;
+      flex-direction: column;
+      line-height: 1;
+      width: 100%;
+      will-change: transform;
+      backface-visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .stat-value.spinning-initial .slot-reel,
+    .stat-value.spinning-update .slot-reel {
+      display: flex;
+    }
+
+    .stat-final-value {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stat-value.spinning-initial .stat-final-value,
+    .stat-value.spinning-update .stat-final-value {
+      display: none;
+    }
+
+    .slot-item {
+      height: var(--slot-item-h);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 100%;
+      font-weight: 700;
+      color: var(--accent-4);
+    }
+
+    @keyframes slotInitial {
+      0% { 
+        transform: translateY(0) translateZ(0);
+        filter: blur(8px) brightness(0.7);
+        text-shadow: 0 0 15px rgba(80,47,76,0.8), 0 0 25px rgba(200,184,219,0.4);
+        opacity: 1;
+      }
+      2% { 
+        transform: translateY(-32px) translateZ(0);
+        filter: blur(8px) brightness(0.7);
+      }
+      25% { 
+        filter: blur(7px) brightness(0.75);
+      }
+      50% { 
+        filter: blur(6px) brightness(0.8);
+      }
+      75% { 
+        filter: blur(3px) brightness(0.95);
+      }
+      90% { 
+        filter: blur(1px) brightness(1);
+      }
+      98% { 
+        transform: translateY(var(--final-offset)) translateZ(0);
+        filter: blur(0.3px) brightness(1);
+      }
+      100% { 
+        transform: translateY(var(--final-offset)) translateZ(0);
+        filter: blur(0px) brightness(1);
+        text-shadow: 0 0 10px rgba(80,47,76,0.55);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slotUpdate {
+      0% { 
+        transform: translateY(0) translateZ(0);
+        filter: blur(6px) brightness(0.75);
+        text-shadow: 0 0 10px rgba(80,47,76,0.8), 0 0 15px rgba(200,184,219,0.3);
+        opacity: 1;
+      }
+      2% { 
+        transform: translateY(-32px) translateZ(0);
+        filter: blur(6px) brightness(0.75);
+      }
+      40% { 
+        filter: blur(4px) brightness(0.9);
+      }
+      80% { 
+        filter: blur(1px) brightness(1);
+      }
+      95% { 
+        transform: translateY(var(--final-offset)) translateZ(0);
+        filter: blur(0.3px) brightness(1);
+      }
+      100% { 
+        transform: translateY(var(--final-offset)) translateZ(0);
+        filter: blur(0px) brightness(1);
+        text-shadow: 0 0 10px rgba(80,47,76,0.55);
+        opacity: 1;
+      }
+    }
+
+    .stat-value.spinning-initial .slot-reel {
+      animation: slotInitial 1.5s cubic-bezier(0.25, 0.1, 0.5, 1) 1 forwards !important;
+    }
+
+    .stat-value.spinning-update .slot-reel {
+      animation: slotUpdate 0.8s cubic-bezier(0.25, 0.1, 0.5, 1) 1 forwards !important;
+    }
+
+    .foot {
+      margin-top: 28px;
+      font-size: 12px;
+      color: rgba(200,184,219,0.7);
+    }
+
+    @media (max-width:540px){
+      .wrap { padding: 20px; }
+      .controls{flex-direction:column}
+      .btn{width:100%}
+      .stat-value { width: 100px; font-size: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1 class="logo"><span>LΞΛNS</span></h1>
+    <div class="subtitle">Elite RotMG guild — MV • HM Shatts • High requirements</div>
+
+    <div class="controls" role="navigation" aria-label="Primary actions">
+      <button class="btn btn-apply" aria-label="Apply to Leans" onclick="location.href='questionnaire.html'">Apply</button>
+    </div>
+
+    <div class="foot">Leans • Built for endgame players • Minimal requirements enforced</div>
+
+    <div class="stats" id="guild-stats" aria-live="polite">
+      <div class="stat-box" data-key="members">
+        <div class="stat-label">Members</div>
+        <div class="stat-value" id="kpi-members" data-first="true">
+          <div class="slot-reel" aria-hidden="true"></div>
+          <div class="stat-final-value">Loading...</div>
+        </div>
+      </div>
+
+      <div class="stat-box" data-key="totalFame">
+        <div class="stat-label">Total Fame</div>
+        <div class="stat-value" id="kpi-fame" data-first="true">
+          <div class="slot-reel" aria-hidden="true"></div>
+          <div class="stat-final-value">Loading...</div>
+        </div>
+      </div>
+
+      <div class="stat-box" data-key="rank">
+        <div class="stat-label">World Rank</div>
+        <div class="stat-value" id="kpi-rank" data-first="true">
+          <div class="slot-reel" aria-hidden="true"></div>
+          <div class="stat-final-value">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot" id="last-updated" aria-live="polite"></p>
+  </div>
+
+  <script>
+  (async () => {
+    // CONFIG
+    const LOCAL_PATH = 'data/guild-stats.json';
+    const REMOTE_JSON_URL = null;
+    const REFRESH_INTERVAL_MS = 60_000;
+    const FETCH_TIMEOUT_MS = 8_000;
+    const RETRY_COUNT = 1;
+    const SLOT_ITEM_H = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--slot-item-h')) || 32;
+    const NF = new Intl.NumberFormat('en-US');
+
+    // DOM
+    const membersWrap = document.getElementById('kpi-members');
+    const fameWrap = document.getElementById('kpi-fame');
+    const rankWrap = document.getElementById('kpi-rank');
+    const lastUpdatedEl = document.getElementById('last-updated');
+
+    // state
+    let lastState = { members: null, totalFame: null, rank: null };
+
+    // helpers
+    function formatMembers(v) {
+      if (v == null) return 'N/A';
+      return NF.format(Number(v));
+    }
+    function formatFame(v) {
+      if (v == null) return 'N/A';
+      const n = Number(v);
+      return n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : NF.format(n);
+    }
+    function formatRank(v) {
+      if (v == null) return 'N/A';
+      return `#${NF.format(Number(v))}`;
+    }
+
+    // fetch timeout
+    async function fetchWithTimeout(url, timeoutMs) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+        clearTimeout(id);
+        return res;
+      } catch (err) {
+        clearTimeout(id);
+        throw err;
+      }
+    }
+
+    async function tryLoadJson(url) {
+      const urlWithTs = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+      const resp = await fetchWithTimeout(urlWithTs, FETCH_TIMEOUT_MS);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      return resp.json();
+    }
+
+    async function fetchGuildStatsLocalOrRemote() {
+      try {
+        const data = await tryLoadJson(LOCAL_PATH);
+        return data;
+      } catch (localErr) {
+        console.warn('Local JSON failed:', localErr);
+        if (REMOTE_JSON_URL) {
+          let lastErr;
+          for (let i=0;i<=RETRY_COUNT;i++){
+            try {
+              const data = await tryLoadJson(REMOTE_JSON_URL);
+              return data;
+            } catch (e) {
+              lastErr = e;
+              await new Promise(r=>setTimeout(r,200));
+            }
+          }
+          throw lastErr ?? localErr;
+        }
+        throw localErr;
+      }
+    }
+
+    // string
+    function makeIntermediates(finalText, count=6) {
+      const arr = [];
+      for (let i=0;i<count;i++){
+        let s = finalText;
+        const digits = finalText.replace(/[^\d]/g,'');
+        if (digits.length) {
+          const base = Number(digits) || 0;
+          const jitter = Math.floor(Math.max(1, base * 0.02) * (Math.random()*2-1));
+          if (finalText.includes('M')) {
+            const approx = Math.max(0, base + jitter);
+            s = (approx >= 1000000) ? `${(approx/1000000).toFixed(1)}M` : NF.format(approx);
+          } else if (finalText.startsWith('#')) {
+            s = `#${Math.max(1, base + jitter)}`;
+          } else {
+            s = NF.format(Math.max(0, base + jitter));
+          }
+        } else {
+          s = finalText.split('').reverse().join('');
+        }
+        arr.push(s);
+      }
+      return arr;
+    }
+
+    function buildSlotReel(slotReelEl, finalText) {
+      slotReelEl.innerHTML = '';
+      const intermediates = makeIntermediates(finalText, 6);
+      intermediates.forEach(t => {
+        const it = document.createElement('div');
+        it.className = 'slot-item';
+        it.textContent = t;
+        slotReelEl.appendChild(it);
+      });
+      // final
+      const finalItem = document.createElement('div');
+      finalItem.className = 'slot-item';
+      finalItem.textContent = finalText;
+      slotReelEl.appendChild(finalItem);
+
+      const itemsCount = slotReelEl.children.length;
+      const offset = -1 * (itemsCount - 1) * SLOT_ITEM_H;
+      slotReelEl.style.setProperty('--final-offset', offset + 'px');
+    }
+
+    // animatestat
+    function animateStat(containerWrap, finalText, isInitial=false) {
+      const slotReel = containerWrap.querySelector('.slot-reel');
+      const finalValueEl = containerWrap.querySelector('.stat-final-value');
+
+      // reload na failu
+      if (!slotReel || !finalValueEl) {
+        containerWrap.textContent = finalText;
+        return;
+      }
+
+      // build reel
+      buildSlotReel(slotReel, finalText);
+
+      // set classes
+      const className = isInitial ? 'spinning-initial' : 'spinning-update';
+      // ensure any previous classes removed
+      containerWrap.classList.remove('spinning-initial','spinning-update');
+
+      // hide na animacji jebanej kurwa
+      finalValueEl.style.display = 'none';
+      // force reflow
+      void containerWrap.offsetWidth;
+      containerWrap.classList.add(className);
+
+      // listen
+      const onAnimEnd = (ev) => {
+        if (ev.target !== slotReel) return;
+        slotReel.removeEventListener('animationend', onAnimEnd);
+        containerWrap.classList.remove(className);
+        finalValueEl.textContent = finalText;
+        finalValueEl.style.display = 'flex';
+      };
+      slotReel.addEventListener('animationend', onAnimEnd);
+    }
+
+    // change no nowej value
+function handleNewData(parsed) {
+  // mapping
+  const membersRaw = parsed.members ?? parsed.memberCount ?? parsed.member_count ?? null;
+  const totalAlive = parsed.totalAliveFame ?? parsed.totalAliveFrame ?? parsed.totalFame ?? parsed.total_alive_fame ?? null;
+  const worldRank = parsed.worldRank ?? parsed.rank ?? parsed.world_rank ?? null;
+  const lastUpdated = parsed.lastUpdated ?? parsed.updatedAt ?? parsed.timestamp ?? null;
+
+  const membersFormatted = membersRaw != null ? formatMembers(membersRaw) : 'N/A';
+  const fameFormatted = totalAlive != null ? formatFame(totalAlive) : 'N/A';
+  const rankFormatted = worldRank != null ? formatRank(worldRank) : 'N/A';
+
+  // members
+  if (lastState.members === null) {
+    animateStat(membersWrap, membersFormatted, true);
+  } else if (lastState.members !== membersRaw) {
+    animateStat(membersWrap, membersFormatted, false);
+  } else {
+    membersWrap.querySelector('.stat-final-value').textContent = membersFormatted;
+  }
+
+  // fame
+  if (lastState.totalFame === null) {
+    animateStat(fameWrap, fameFormatted, true);
+  } else if (lastState.totalFame !== totalAlive) {
+    animateStat(fameWrap, fameFormatted, false);
+  } else {
+    fameWrap.querySelector('.stat-final-value').textContent = fameFormatted;
+  }
+
+  // rank
+  if (lastState.rank === null) {
+    animateStat(rankWrap, rankFormatted, true);
+  } else if (lastState.rank !== worldRank) {
+    animateStat(rankWrap, rankFormatted, false);
+  } else {
+    rankWrap.querySelector('.stat-final-value').textContent = rankFormatted;
+  }
+
+  // update last state
+  lastState.members = membersRaw;
+  lastState.totalFame = totalAlive;
+  lastState.rank = worldRank;
+
+  // last updated text
+  if (lastUpdated) {
+    lastUpdatedEl.textContent = `Last updated: ${new Date(lastUpdated).toLocaleString()}`;
+  } else {
+    lastUpdatedEl.textContent = `Last updated: ${new Date().toLocaleString()} (fetched)`;
+  }
+}
+
+
+    // fallback display on error
+    function showErrorState(err) {
+      console.error('Stats fetch error:', err);
+      if (!membersWrap.querySelector('.stat-final-value').textContent) membersWrap.querySelector('.stat-final-value').textContent = 'Error';
+      if (!fameWrap.querySelector('.stat-final-value').textContent) fameWrap.querySelector('.stat-final-value').textContent = 'Error';
+      if (!rankWrap.querySelector('.stat-final-value').textContent) rankWrap.querySelector('.stat-final-value').textContent = 'Error';
+      lastUpdatedEl.textContent = 'Could not refresh stats — check backend.';
+    }
+
+    // main loader
+    async function loadOnce() {
+      try {
+        const parsed = await fetchGuildStatsLocalOrRemote();
+        handleNewData(parsed);
+      } catch (err) {
+        showErrorState(err);
+      }
+    }
+
+    // initial run (ale poczekaj na przeciecie aby animacja była widoczna)
+    let hasRunInitial = false;
+    const statsContainer = document.getElementById('guild-stats');
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(ent => {
+          if (ent.isIntersecting && !hasRunInitial) {
+            hasRunInitial = true;
+            loadOnce();
+            o.unobserve(ent.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      obs.observe(statsContainer);
+    } else {
+      // no IO support
+      loadOnce();
+      hasRunInitial = true;
+    }
+
+    // periodic refresh regardless
+    setInterval(async () => {
+      try {
+        const parsed = await fetchGuildStatsLocalOrRemote();
+        handleNewData(parsed);
+      } catch (err) {
+        console.warn('Periodic refresh failed:', err);
+      }
+    }, REFRESH_INTERVAL_MS);
+
+    // expose API/debugging
+    window.LEANS_STATS = {
+      reload: async () => {
+        try {
+          const parsed = await fetchGuildStatsLocalOrRemote();
+          handleNewData(parsed);
+        } catch (err) {
+          showErrorState(err);
+        }
+      },
+      setRemote(url) {
+        if (typeof url !== 'string') throw new TypeError('url must be string');
+        window.__LEANS_REMOTE_OVERRIDE = url;
+      }
+    };
+
+    // override fetch pod ovveride
+    const baseFetch = fetchGuildStatsLocalOrRemote;
+    fetchGuildStatsLocalOrRemote = async function() {
+      const override = window.__LEANS_REMOTE_OVERRIDE ?? REMOTE_JSON_URL;
+      if (!override) {
+        return await baseFetch();
+      } else {
+        // try local1
+        try {
+          const data = await tryLoadJson(LOCAL_PATH);
+          return data;
+        } catch (e) {
+          let lastErr;
+          for (let i=0;i<=RETRY_COUNT;i++){
+            try {
+              const data = await tryLoadJson(override);
+              return data;
+            } catch (re) {
+              lastErr = re;
+              await new Promise(r=>setTimeout(r,200));
+            }
+          }
+          throw lastErr ?? e;
+        }
+      }
+    };
+
+  })();
+  </script>
+
+</body>
+</html>
