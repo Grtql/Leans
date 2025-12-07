@@ -393,7 +393,7 @@
       const controller = new AbortController();
       const id = setTimeout(() => controller.abort(), timeoutMs);
       try {
-        const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+        const res = await fetch(`${url}?t=${Date.now()}`, { cache: 'no-store', signal: controller.signal });
         clearTimeout(id);
         return res;
       } catch (err) {
@@ -662,4 +662,5 @@ function handleNewData(parsed) {
   </script>
 
 </body>
+
 </html>
