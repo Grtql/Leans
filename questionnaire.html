@@ -425,15 +425,17 @@
       submitBtn.disabled = true;
 
       // basic check
-      const requiredFields = Array.from(form.querySelectorAll("[required]") );
+      const requiredFields = Array.from(form.querySelectorAll("[required]"));
       for (const field of requiredFields) {
-        if (!field.value || !field.value.toString().trim()) {
+        if (field.type === "checkbox" || field.disabled) continue; // skip checkbox
+        if (!field.value.trim()) {
           field.focus();
           showStatus("⚠️ Please fill out all required fields before submitting.");
           submitBtn.disabled = false;
           return;
         }
       }
+
 
       // RealmEye URL check
       const realmEyeInput = form.querySelector('input[name="realmeye_url"]');
