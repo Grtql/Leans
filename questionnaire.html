@@ -427,14 +427,16 @@
       // basic check
       const requiredFields = Array.from(form.querySelectorAll("[required]"));
       for (const field of requiredFields) {
-        if (field.type === "checkbox" || field.disabled) continue; // skip checkbox
-        if (!field.value.trim()) {
+        if (field.type === "checkbox" || field.disabled || field.offsetParent === null) continue;
+  
+        if (!field.value || field.value.trim() === "") {
           field.focus();
           showStatus("⚠️ Please fill out all required fields before submitting.");
           submitBtn.disabled = false;
           return;
         }
       }
+
 
 
       // RealmEye URL check
