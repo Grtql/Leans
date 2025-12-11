@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Apply to LEANS Guild</title>
+  <title>Apply to Leans Guild</title>
+  <link rel="icon" type="image/x-icon" href="hrmQLfs.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
 
@@ -171,6 +172,65 @@
       letter-spacing:0.05em;
     }
 
+    /* availability switch */
+    .availability-toggle {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .avail-switch {
+      position: relative;
+      display: flex;
+      width: 160px;
+      height: 40px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      font-weight: 600;
+      user-select: none;
+      transition: all var(--transition);
+    }
+
+    .avail-switch .option {
+      flex: 1;
+      text-align: center;
+      line-height: 40px;
+      color: var(--accent-3);
+      z-index: 1;
+      transition: color var(--transition);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .avail-switch .indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent-1));
+      border-radius: 999px;
+      transition: transform 0.3s var(--transition);
+      z-index: 0;
+    }
+
+    /* move indicator */
+    input#avail_us:checked ~ .avail-switch .indicator {
+      transform: translateX(100%);
+    }
+    input#avail_eu:checked ~ .avail-switch .indicator {
+      transform: translateX(0%);
+    }
+
+    input#avail_eu:checked ~ .avail-switch label[for="avail_eu"],
+    input#avail_us:checked ~ .avail-switch label[for="avail_us"] {
+      color: var(--accent-4);
+    }
+
+
+
     .controls {
       margin-top:clamp(36px,5vw,56px);
       display:flex;
@@ -278,7 +338,7 @@
 <body>
   <div class="wrap">
     <h1 class="logo">Apply</h1>
-    <div class="subtitle">Join the ranks of Leans — elite endgame guild</div>
+    <div class="subtitle">Join the ranks of Leans — endgame guild</div>
 
     <div class="form-container">
       <h2>LEANS – Application Form</h2>
@@ -293,7 +353,7 @@
 
         <div class="form-group">
           <label for="alive_fame">2. Alive Fame</label>
-          <small id="alive-help">How much alive fame does your main character currently have?</small>
+          <small id="alive-help">How much alive fame do you currently have?</small>
           <input id="alive_fame" type="number" name="alive_fame" class="input-small" min="0" step="1" required aria-describedby="alive-help">
         </div>
 
@@ -333,19 +393,19 @@
 
         <div class="form-group">
           <label for="discord_tag">6. Discord name</label>
-          <small id="disc_help">Your Discord username (e.g. Name#1234).</small>
+          <small id="disc_help">Your Discord username.</small>
           <input id="discord_tag" type="text" name="discord_tag" required aria-describedby="disc_help">
         </div>
 
         <div class="form-group">
           <label for="mechanics_knowledge">7. Mechanics Knowledge Check</label>
-          <small id="mech_help">Name 3 mechanics in MV or Shatters HM that commonly kill inexperienced players.</small>
+          <small id="mech_help">Name 3 mechanics in endgame dungeons that commonly kill inexperienced players.</small>
           <textarea id="mechanics_knowledge" name="mechanics_knowledge" class="medium" required aria-describedby="mech_help"></textarea>
         </div>
 
         <div class="form-group">
           <label for="motivation">8. Motivation</label>
-          <small id="mot_help">Why do you want to join LEANS instead of another guild?</small>
+          <small id="mot_help">Why do you want to join Leans instead of another guild?</small>
           <textarea id="motivation" name="motivation" class="small" required aria-describedby="mot_help"></textarea>
         </div>
 
@@ -364,9 +424,19 @@
         </div>
 
         <div class="form-group">
-          <label for="availability">11. Availability</label>
-          <small id="avail_help">When are you usually active (EU / NA time, hours per day/week)?</small>
-          <textarea id="availability" name="availability" class="small input-small" aria-describedby="avail_help"></textarea>
+          <label>11. Availability</label>
+          <small id="avail_help">Select your main region:</small>
+
+          <div class="availability-toggle" role="group" aria-labelledby="avail_help">
+            <input type="radio" id="avail_eu" name="availability" value="EU" required hidden>
+            <input type="radio" id="avail_us" name="availability" value="US" hidden>
+
+            <div class="avail-switch">
+              <label for="avail_eu" class="option">EU</label>
+              <label for="avail_us" class="option">US</label>
+              <div class="indicator"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Honeypot dla spamu-->
@@ -410,6 +480,7 @@
       status.scrollIntoView({behavior:"smooth", block:"center"});
     }
 
+
     function validateRealmEyeURL(value) {
       try {
         const url = new URL(value);
@@ -430,7 +501,6 @@
         if (field.type === "checkbox" || field.disabled || field.offsetParent === null) continue;
   
         if (!field.value || field.value.trim() === "") {
-          field.focus();
           showStatus("⚠️ Please fill out all required fields before submitting.");
           submitBtn.disabled = false;
           return;
